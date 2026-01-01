@@ -1,0 +1,14 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Python: 현재 파일",
+        "type": "python",
+        "request": "launch",
+        "program": "${file}",
+        "console": "integratedTerminal",
+        "python": "${workspaceFolder}/venv/bin/python"
+      }
+    ]
+  }
+  
