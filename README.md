@@ -10,16 +10,16 @@
 
 ## 프로젝트 개요
 
-본 프로젝트는 전통적인 **언샤프 마스크(Unsharp Mask, USM)** 기법을 확장하여, 이미지의 **패치 단위 특성(평균, 표준편차, 주파수 비율 등)** 을 입력으로 활용해 최적의 **k(샤프닝 계수)** 를 학습·예측하는 **Adaptive Sharpening System**을 구축하는 것을 목표로 합니다.  
+본 프로젝트는 전통적인 **언샤프 마스크(Unsharp Mask, USM)** 기법을 확장하여, 이미지의 **패치 단위 특성(밝기 평균, 표준편차, 주파수 비율)을 입력으로 활용해 최적의 **k(샤프닝 강도)** 를 학습, 예측하는 **Adaptive Sharpening System**을 구축하는 것을 목표로 합니다.  
 
-특히, 단순 고정 k값이 아니라 **Grid Search + 머신러닝 회귀 모델(XGBoost)** 을 통해 **PSNR, SSIM 기반 최적 k-map**을 생성하고, 아티팩트를 최소화하면서 선명도를 극대화하는 데 중점을 두었습니다.  
+특히, 단순 고정 k값이 아니라 **Grid Search + 머신러닝 회귀 모델(XGBoost)** 을 통해 **PSNR, SSIM 기반 최적 k-map**을 생성하고, 선명도를 극대화하는 데 중점을 두었습니다.  
 
 프로젝트의 주요 모듈은 다음과 같이 구성되어 있습니다:  
 
 1. [preprocessing.ipynb](https://colab.research.google.com/github/kang0225/sharpening-image-by-ausm/blob/main/notebooks/preprocessing.ipynb) : 데이터셋 생성, 패치별 피처 추출 및 그리드 서치 기반 타겟 k 생성  
 2. [model.ipynb](https://colab.research.google.com/github/kang0225/sharpening-image-by-ausm/blob/main/notebooks/model.ipynb) : XGBoost 기반 회귀 모델 학습 및 저장  
 3. [inference.ipynb](https://colab.research.google.com/github/kang0225/sharpening-image-by-ausm/blob/main/notebooks/inference.ipynb) : 학습된 모델을 이용하여 새로운 이미지의 k-map을 생성하고 샤프닝 수행  
-4. [main.ipynb](https://colab.research.google.com/github/kang0225/sharpening-image-by-ausm/blob/main/notebooks/main.ipynb) : 학습/추론 실행 파이프라인 (훈련/추론 모드 선택 가능)  
+4. [params.ipynb](https://colab.research.google.com/github/kang0225/sharpening-image-by-ausm/blob/main/notebooks/params.ipynb) : 파라미터 및 하이퍼파라미터 저장
 
 ---
 
@@ -30,10 +30,10 @@
 고해상도 이미지를 입력으로 받아, 인위적으로 **저해상도(LQ) 이미지**를 생성하고 이를 다시 보정하며 패치 단위로 최적 k값을 찾습니다.  
 
 - **LQ 생성**: 다운샘플링 후 업샘플링 + Gaussian Blur  
-- **그리드 서치**: 후보 k값(2.0, 2.5, 3.0)에 대해 패치별 PSNR 계산 → 최적 k 선택  
+- **그리드 서치**: 패치별 PSNR 계산 → 최적 k 선택  
 - **피처 추출**:  
-  - 평균 (mean)  
-  - 표준편차 (std)  
+  - Luminance 평균 (mean)  
+  - Luminance 표준편차 (std)  
   - 고주파 에너지 비율 (high_freq_ratio)  
 - **CSV 저장**: 총 N개 패치 데이터를 `training_dataset.csv`로 출력  
 
@@ -57,12 +57,9 @@
 
 - 입력: 원본 이미지 (`./image_input/new_img.png`)  
 - 출력: 보정된 결과 (`./result/sharpened_img.png`)  
-- 실행 시 로그 예시:
-
-  [INFO] k_map: min=0.350, max=2.987, mean=1.842 <br>
-  [INFO] 저장: ./result/sharpened_img.png
-
-  
+- 출력 예시:
+  [INFO] 사용된 시그마 : 2.80
+  [INFO] 보정된 이미지 :
 ---
 
 ## 결과 분석
