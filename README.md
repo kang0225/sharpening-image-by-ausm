@@ -56,7 +56,7 @@
 새로운 이미지를 입력받아 **패치별 k-map**을 생성하고, 이를 기반으로 **Adaptive Unsharp Mask**를 적용합니다.  
 
 - 입력: 원본 이미지 (`./image_input/new_img.png`)  
-- 출력: 보정된 결과 (`./result/sharpened_img.png`)  
+- 출력: 보정된 결과 (`./result/sharpened_image.png`)  
 - 출력 예시:
   [INFO] 사용된 시그마 : 2.80
   [INFO] 보정된 이미지 :
