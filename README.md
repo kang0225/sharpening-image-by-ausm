@@ -79,7 +79,7 @@
 
 | Input (원본) | Enhanced (보정) |
 |--------------|----------------|
-| ![Input](./image_input/new_img.png) | ![Output](./result/sharpened_img.png) |
+| ![Input](./image_input/new_img.png) | ![Output](./result/sharpened_image.png) |
 
 ---
 
