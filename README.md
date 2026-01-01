@@ -67,14 +67,13 @@
 `grid_results.csv` 및 `training_dataset.csv` 기반으로 성능을 정량적으로 평가했습니다.  
 
 - **평가지표**:  
-- PSNR (Peak Signal-to-Noise Ratio)  
-- SSIM (Structural Similarity Index)  
+- RMSE(Root Mean Squared Error)  
+- RMAE(Root Mean Absolute Error)  
 
-| **데이터셋**      | **PSNR** | **SSIM** | **결론** |
+| **데이터셋**      | **Train Set** | **Test Set** | **결론** |
 |-------------------|---------:|---------:|----------|
-| 훈련 패치 평균     |  32.1 dB |   0.941  | 안정적 샤프닝, 노이즈 억제 양호 |
-| 검증 패치 평균     |  30.5 dB |   0.927  | 약간의 성능 저하 있으나 실용적 수준 유지 |
-| 최종 추론 이미지   |  31.8 dB |   0.938  | halo 최소화, 시각적 선명도 만족 |
+| RMSE    |  0.001126 |   0.001129  |  정밀한 k값 예측 수행 |
+| RMAE     |  0.029121 |   0.029179  | 보지 못한 데이터에서도 일관된 성능 유지|
 
 아래는 샘플 결과 이미지입니다:  
 
@@ -90,10 +89,9 @@
 
 - 단순 고정 k값보다 선명도와 안정성 모두 개선됨  
 - PSNR/SSIM 기반 정량적 지표에서도 의미 있는 성능 확보  
-
-**향후 연구 과제**:  
-- CNN/딥러닝 기반 End-to-End Sharpening Network 도입  
-- GPU 최적화를 통한 실시간 영상 처리 지원  
-- 더 다양한 후보 k값 및 패치 특성 반영 (텍스처, 색상 대비 등)  
+- Grid Search를 통해 PSNR 최대화를 기준으로 최적의 샤프닝 강도($k$)를 탐색  
+- 단순 픽셀 값뿐만 아니라 FFT(고속 푸리에 변환) 기반의 고주파 에너지 비율(High Frequency Ratio)을 핵심 Feature로 설계하여 평탄 영역과 엣지 영역을 명확히 구분하여 학습  
+- 훈련세트와 테스트세트 간의 성능 차이가 0.8% 미만으로 유지됨으로써 과적합(Overfitting) 없이 모델이 다양한 이미지 패턴에 대해 일관된 예측
+- Black-box 성향이 강한 End-to-End 딥러닝 방식 대신, ML 모델이 파라미터만 예측하고 실제 보정은 수식 기반(Unsharp Mask)으로 수행하는 하이브리드 구조 사용
 
 ---
