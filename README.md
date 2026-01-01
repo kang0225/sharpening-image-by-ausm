@@ -16,10 +16,10 @@
 
 프로젝트의 주요 모듈은 다음과 같이 구성되어 있습니다:  
 
-1. [preprocessing.py](./preprocessing.py) : 데이터셋 생성, 패치별 피처 추출 및 그리드 서치 기반 타겟 k 생성  
-2. [model.py](./model.py) : XGBoost 기반 회귀 모델 학습 및 저장  
-3. [inference.py](./inference.py) : 학습된 모델을 이용하여 새로운 이미지의 k-map을 생성하고 샤프닝 수행  
-4. [main.py](./main.py) : 학습/추론 실행 파이프라인 (훈련/추론 모드 선택 가능)  
+1. [preprocessing.ipynb](./preprocessing.ipynb) : 데이터셋 생성, 패치별 피처 추출 및 그리드 서치 기반 타겟 k 생성  
+2. [model.ipynb](./model.ipynb) : XGBoost 기반 회귀 모델 학습 및 저장  
+3. [inference.ipynb](./inference.ipynb) : 학습된 모델을 이용하여 새로운 이미지의 k-map을 생성하고 샤프닝 수행  
+4. [main.ipynb](./main.ipynb) : 학습/추론 실행 파이프라인 (훈련/추론 모드 선택 가능)  
 
 ---
 
