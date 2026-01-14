@@ -25,25 +25,25 @@
 
 ## 프로젝트 워크플로우
 
-### ① 데이터셋 생성 (`preprocessing.py`)
+### #1 데이터셋 생성 (`preprocessing.py`)
 
 고해상도 이미지를 입력으로 받아, 인위적으로 **저해상도(LQ) 이미지**를 생성하고 이를 다시 보정하며 패치 단위로 최적 k값을 찾습니다.  
 
-- **LQ 생성**: 다운샘플링 후 업샘플링 + Gaussian Blur  
-- **그리드 서치**: 패치별 PSNR 계산 → 최적 k 선택  
-- **피처 추출**:  
+- 다운샘플링 후 업샘플링 + Gaussian Blur 후 LQ 생성
+- 패치별 PSNR 계산 후, 최적 k 선택하여 그리드서치
+- 피쳐는 아래와 같습니다. 
   - Luminance 평균 (mean)  
   - Luminance 표준편차 (std)  
   - 고주파 에너지 비율 (high_freq_ratio)  
-- **CSV 저장**: 총 N개 패치 데이터를 `training_dataset.csv`로 출력  
+- 총 N개 패치 데이터를 `training_dataset.csv`로 출력하여 추후에 활용
 
 ---
 
-### ② 모델 학습 (`model.py`)
+### #2 모델 학습 (`model.py`)
 
 생성된 `training_dataset.csv`를 기반으로 **XGBoost Regressor**를 학습합니다.  
 
-- 입력 피처: `[mean, std, high_freq_ratio]`  
+- `[mean, std, high_freq_ratio]`가 입력 피쳐
 - 타겟 값: `target_k`  
 - 학습/검증 데이터 분리 (train 80%, val 20%)  
 - 평가지표: MSE (Mean Squared Error)  
@@ -51,15 +51,15 @@
 
 ---
 
-### ③ 추론 및 보정 (`inference.py`)
+### #3 추론 및 보정 (`inference.py`)
 
 새로운 이미지를 입력받아 **패치별 k-map**을 생성하고, 이를 기반으로 **Adaptive Unsharp Mask**를 적용합니다.  
 
-- 입력: 원본 이미지 (`./image_input/new_img.png`)  
-- 출력: 보정된 결과 (`./result/sharpened_image.png`)  
+- 원본 이미지 (`./image_input/new_img.png`)  
+- 보정된 이미지 (`./result/sharpened_image.png`)  
 - 출력 예시:
   [INFO] 사용된 시그마 : 2.80
-  [INFO] 보정된 이미지 :
+  [INFO] 보정된 이미지 : (사진으로 출력)
 ---
 
 ## 결과 분석
@@ -89,7 +89,7 @@
 
 - 단순 고정 k값보다 선명도와 안정성 모두 개선됨  
 - PSNR/SSIM 기반 정량적 지표에서도 의미 있는 성능 확보  
-- Grid Search를 통해 PSNR 최대화를 기준으로 최적의 샤프닝 강도($k$)를 탐색  
+- Grid Search를 통해 PSNR 최대화를 기준으로 최적의 샤프닝 강도(k)를 탐색  
 - 단순 픽셀 값뿐만 아니라 FFT(고속 푸리에 변환) 기반의 고주파 에너지 비율(High Frequency Ratio)을 핵심 Feature로 설계하여 평탄 영역과 엣지 영역을 명확히 구분하여 학습  
 - 훈련세트와 테스트세트 간의 성능 차이가 0.8% 미만으로 유지됨으로써 과적합(Overfitting) 없이 모델이 다양한 이미지 패턴에 대해 일관된 예측
 - Black-box 성향이 강한 End-to-End 딥러닝 방식 대신, ML 모델이 파라미터만 예측하고 실제 보정은 수식 기반(Unsharp Mask)으로 수행하는 하이브리드 구조 사용
